@@ -14,10 +14,10 @@ module.exports = {
     // Get message body from req object
     // console.log(req);
     // Get messageId, messageText, userId, roomId, createdAt, updatedAt from req and pass them into .create
-    let {userName, text, roomName} = req.body;
+    let {userId, text, roomId} = req.body;
     let currentTime = req._startTime;
 
-    models.messages.create(text, userName, roomName, function(err) {
+    models.messages.create(2, text, userId, roomId, currentTime, function(err, messages) {
       res.send('OK');
     // Send a response based on callback in models.messages.post
     //});
