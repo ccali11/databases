@@ -1,30 +1,31 @@
 /* You'll need to have MySQL running and your Node server running
  * for these tests to pass. */
 
-var mysql = require('mysql');
+var Sequelize = require('sequelize');
 var request = require('request'); // You might need to npm install the request module!
 var expect = require('chai').expect;
 
 describe('Persistent Node Chat Server', function() {
-  var dbConnection;
+  // var dbConnection;
 
   beforeEach(function(done) {
-    dbConnection = mysql.createConnection({
-      user: 'root',
-      password: 'password',
-      database: 'chat'
+    var db = new Sequelize('chatter', 'root', 'password', {
+      host: 'localhost',
+      dialect: 'mysql' /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
     });
-    dbConnection.connect();
 
-    var tablename = 'messages'; // TODO: fill this out
+    db.sync(
+      { force: true }
+    );
+    // var tablename = 'messages'; // TODO: fill this out
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
-    dbConnection.query('truncate ' + tablename, done);
+    // dbConnection.query('truncate ' + tablename, done);
   });
 
   afterEach(function() {
-    dbConnection.end();
+    db.close();
   });
 
   it('Should insert posted messages to the DB', function(done) {
